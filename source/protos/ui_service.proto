@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+service ui_service{
+    rpc load_prediction (img, prediction) returns (Empty) {};
+}
+
+message img_path{
+    string path =1;
+}
+
+message patient_data {
+    string img_path = 1;
+    string img_pred_path = 2;
+    string name = 3;
+    string last_name = 4;
+    string observations = 5;
+    string doc_type = 6;
+}
