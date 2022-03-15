@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 service ui_service{
-    rpc load_prediction (img, prediction) returns (Empty) {};
+    rpc load_prediction (prediction_data) returns (Empty) {};
 }
 
 message img_path{
@@ -15,4 +15,9 @@ message patient_data {
     string last_name = 4;
     string observations = 5;
     string doc_type = 6;
+}
+
+message prediction_data {
+    patient_data patient = 1;
+    img_path path = 2;
 }
