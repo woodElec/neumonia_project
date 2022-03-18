@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+service Inference{
+
+	rpc run_inference(img_path) returns (prediction) {}
+
+}
+
+message img_path {
+
+	string img_path = 1;
+
+}
+
+message image {
+    bytes img_content = 1;
+    string dtype = 2;
+}
+
+message prediction {
+
+	image pred_imagen = 1;
+    float percentage = 2;
+    string type = 3;
+
+}
+
