@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+service Pdf_generator{
+    rpc create_pdf (patient_data) returns (pdf_status){}
+}
+
+message patient_data {
+    string name = 1;
+    string last_name = 2;
+    string id_type = 3;
+    string id_num = 4;
+    string gender = 5;
+    string img_path = 6;
+    string pred_imagen = 7;
+    float percentage = 8;
+    string type = 9;
+}
+
+message pdf_status {
+    string message = 1;
+}
