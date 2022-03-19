@@ -1,4 +1,8 @@
+#pip install reportlab
+
 import sys
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
 
 sys.path.append("../.")
 sys.path.append("../../")
@@ -15,8 +19,18 @@ class Pdf_generator(pdf_generator_pb2_grpc.Pdf_generatorServicer):
 
 
     def create_pdf(self, request, context):
-        pass
+        
+        Nombre = request.name
+        Apellido = request.id
 
+        c = canvas.Canvas("Reporte.pdf", pagesize=A4)
+        
+        s = c.save()
+
+        if s is None: #Si no se genera un objeto s no guarda
+            return pdf_generator_pb2.back_response(message = 'No fue posible guardar el documento')
+        else: 
+            return pdf_generator_pb2.back_response(message = 'Documento guardado')
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
