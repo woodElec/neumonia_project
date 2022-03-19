@@ -14,7 +14,7 @@ import logging
 class Pdf_generator(pdf_generator_pb2_grpc.Pdf_generatorServicer):
 
 
-    def patient_data(self, request, context):
+    def create_pdf(self, request, context):
         pass
 
 
