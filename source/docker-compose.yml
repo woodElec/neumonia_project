@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  ui:
+    build: 
+      context: .
+      dockerfile: <Below_Directory>/Dockerfile
+
+  pdf_generator:
+    build: 
+      context: .
+      dockerfile: <Below_Directory>/Dockerfile
+
+  inference:
+    build: 
+      context: .
+      dockerfile: <Below_Directory>/Dockerfile
+
+  db_access:
+    build: 
+      context: .
+      dockerfile: <Below_Directory>/Dockerfile
+
+  backend:
+    build: 
+      context: .
+      dockerfile: <Below_Directory>/Dockerfile
