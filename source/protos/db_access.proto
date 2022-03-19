@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+service DBAccess {
+    rpc store_patient (patient_data) returns (store_status) {}
+    rpc load_patient (patient_id) returns (patient_data) {}
+}
+
+//Mantenemos la misma estructura de los mensajes del backend pero simplemente
+//agregando la imagen predicha, el porcentaje y el tipo, para poder trabajar el
+//PDF con todos los datos correspondientes.
+message patien_data {
+    string name = 1;
+    string last_name = 2;
+    string id_type = 3;
+    string id_num = 4;
+    string gender = 5;
+    string img_path = 6;
+    image pred_imagen = 7;
+    float percentage = 8;
+    string type = 9;
+}
+
+//Retorna el estado del guardado de la base de datos y permite informar si
+//se presenta algún error en el dato.
+message store_status {
+    string message = 1;
+}
+
+//utilizamos el ID del paciente para identificarlo en la BD y así devolver todos
+//los datos correspondientes ya que este es un número único por paciente.
+message patient_id {
+    string id_num = 1;
+}
+
