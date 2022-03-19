@@ -16,6 +16,7 @@ class Inference(inference_pb2_grpc.InferenceServicer):
 
     def run_inference(self, request, context):
         pass
+        #cargar el modelo
 
 
 def serve():

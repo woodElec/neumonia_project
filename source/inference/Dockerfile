@@ -5,15 +5,15 @@ RUN  apt-get update
 
 WORKDIR /src
 
-COPY requeriments.txt /requeriments.txt
-COPY inference_service.py /inference_service.py
-COPY protos/inference.proto /protos/inference.proto
+COPY inference/requeriments.txt requeriments.txt
+COPY inference/src/inference_service.py inference_service.py
+COPY protos/inference.proto inference.proto
 
 
-RUN pip install -r requirements.txt
-RUN python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. /protos/inference.proto
+RUN pip install -r requeriments.txt
+RUN python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. ./inference.proto
 
-RUN inference_service.py
+
 
 
 
