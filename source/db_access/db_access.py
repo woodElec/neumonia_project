@@ -1,26 +1,29 @@
 import sys
 
-sys.path.append("../.")
-sys.path.append("../../")
+sys.path.append("./")
 
 import grpc
 
-import pdf_generator_pb2_grpc
-import pdf_generator_pb2
+import db_access_pb2_grpc
+import db_access_pb2
 
 from concurrent import futures
 import logging
 
-class Pdf_generator(pdf_generator_pb2_grpc.Pdf_generatorServicer):
+
+class DBAccess(db_access_pb2_grpc.DBAccessServicer):
 
 
-    def create_pdf(self, request, context):
+    def store_patient(self, request, context):
+        pass
+
+    def load_patient(self, request, context):
         pass
 
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    pdf_generator_pb2_grpc.add_Pdf_generatorServicer_to_server(Pdf_generator(), server)
+    db_access_pb2_grpc.add_DBAccessServicer_to_server(DBAccess(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
     server.wait_for_termination()
