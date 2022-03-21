@@ -1,0 +1,7 @@
+os
+grpcio
+grpcio-tools
+cv2
+tensorflow
+
+

@@ -31,4 +31,3 @@ message store_status {
 message patient_id {
     string id_num = 1;
 }
-
