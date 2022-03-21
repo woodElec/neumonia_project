@@ -1,8 +1,9 @@
 import sys
 import cv2
 import os
-import numpy as np
 import tensorflow as tf
+import numpy as np
+
 
 sys.path.append("../.")
 sys.path.append("../../")
