@@ -1,30 +1,25 @@
-from base64 import b64decode
 from cProfile import label
 from logging import PlaceHolder
-from multiprocessing import Value
 from sys import maxsize
-import time
-from tokenize import String
 from typing import Sized
-from unicodedata import name
-from webbrowser import BackgroundBrowser
-from xml.dom.minidom import Document
-from bokeh.layouts import layout, gridplot, column, row
-from bokeh.models import Div, RangeSlider, Spinner, TextInput, Button, PlainText,CustomJS, FileInput
-from bokeh.plotting import figure, show,ColumnDataSource
-from bokeh.io import show, curdoc
-from numpy import size
-import control_ui as cui
-from bokeh.server.server import Server
-from bokeh.application import Application
-from bokeh.application.handlers.function import FunctionHandler
-import matplotlib.pyplot as plt
+import os
+import base64
 
-#def interfaz_neumonia(doc):
+from bokeh.layouts import layout, gridplot, column, row
+from bokeh.models import Div, RangeSlider, Spinner, TextInput, Button, PlainText
+from bokeh.models.widgets import FileInput
+from bokeh.plotting import figure, show
+from bokeh.io import curdoc
+from numpy import size
+from bokeh.models import ColumnDataSource, CustomJS
+
+import ui_control
+
+ui_behavior = ui_control.UIControl()
+
 # prepare some data
 x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 y = [4, 5, 5, 7, 2, 6, 4, 9, 1, 3]
-
 
 # create plot with circle glyphs
 p = figure(x_range=(1, 9), width=300, height=150)
@@ -32,14 +27,12 @@ p2 = figure(x_range=(1, 9), width=300, height=150)
 
 points = p.circle(x=x, y=y, size=30, fill_color="#21a7df")
 
-
-
-
 btImg = FileInput(
-    name = "image_path",
     max_width=200,
-    accept=".jpeg, .jpg,.png"
+    max_height=100
 )
+
+btImg.on_change('value', ui_behavior.load_image)
 
 btPDF = Button(
     
@@ -47,9 +40,9 @@ btPDF = Button(
     max_width=200,
     max_height=100,
     name="btPDF",
-    label="PDF",
+    label="PDF"
 )
-
+#btPDF.on_change(curdoc().models, ui_behavior.create_pdf)
 
 btSave = Button(
     button_type="success",
@@ -87,7 +80,7 @@ slideZoom = RangeSlider(
     title="ZOOM",
     start=0,
     end=10,
-    step=2,
+    step=1,
     value=(p.x_range.start, p.x_range.end),
     orientation='vertical',
     name="slideZoom"
@@ -100,7 +93,7 @@ slideContraste = RangeSlider(
     title="CONTRASTE",
     start=0,
     end=10, 
-    step=2,
+    step=1,
     value=(p.x_range.start, p.x_range.end),
     orientation='vertical',
     name="slideContraste"
@@ -113,34 +106,20 @@ slideContraste = RangeSlider(
 # set up textarea (div)
 divTitulo = Div(
     text="""
-        <p>CLASIFICADOR DE NEUMONIA</p>
-        """,
+          <p>CLASIFICADOR DE NEUMONIA</p>
+          """,
     height=30,
     align = "center",
     name="divTitulo"
 )
+
+
 widhtDiv = 140
-
-divImageLoad = Div(
-    width=300,
-    height=180,
-    name="divimage",
-    id="divimage",
-    background="red"
-)
-
-divImagePredict = Div(
-    width=300,
-    height=180,
-    name="divimagepredict",
-    id="divimagepredict",
-    background="blue"
-)
 
 divNombres = Div(
     text="""
-        <p>NOMBRES: </p>
-        """,
+          <p>NOMBRES: </p>
+          """,
     width=widhtDiv,
     height=30,
     align = "start",
@@ -149,8 +128,8 @@ divNombres = Div(
 
 divApellidos = Div(
     text="""
-        <p>APELLIDOS: </p>
-        """,
+          <p>APELLIDOS: </p>
+          """,
     width=widhtDiv,
     height=30,
     align = "start",
@@ -159,8 +138,8 @@ divApellidos = Div(
 
 divTipoDoc = Div(
     text="""
-        <p>TIPO DOCUMENTO: </p>
-        """,
+          <p>TIPO DOCUMENTO: </p>
+          """,
     width=widhtDiv,
     height=30,
     align = "start",
@@ -169,8 +148,8 @@ divTipoDoc = Div(
 
 divNumDoc = Div(
     text="""
-        <p>Numero ID: </p>
-        """,
+          <p>Numero ID: </p>
+          """,
     width=widhtDiv,
     height=30,
     align = "start",
@@ -179,8 +158,8 @@ divNumDoc = Div(
 
 divGenero = Div(
     text="""
-        <p>GENERO: </p>
-        """,
+          <p>GENERO: </p>
+          """,
     width=widhtDiv,
     height=30,
     align = "start",
@@ -189,8 +168,8 @@ divGenero = Div(
 
 divProbabilidad = Div(
     text="""
-        <p>PROBABILIDAD: </p>
-        """,
+          <p>PROBABILIDAD: </p>
+          """,
     width=widhtDiv-40,
     height=30,
     align = "start",
@@ -199,13 +178,14 @@ divProbabilidad = Div(
 
 divTipo = Div(
     text="""
-        <p>TIPO: </p>
-        """,
+          <p>TIPO: </p>
+          """,
     width=70,
     height=30,
     align = "start",
     name="divTipo"
 )
+
 
 widthTXI=250
 
@@ -248,55 +228,28 @@ txiTipo = TextInput(
     name="txiTipo"
 )
 
-def showImage(attr, old, new):
-    divImageLoad.background="white"
-    div_img_html = "<img src='"+new+"'>"
-    divImageLoad.text = div_img_html
-    print(div_img_html)
-btImg.on_change('filename',showImage)
 
-def upload_fit_data(attr, old, new):
-    print("Convirtiendo a array")
-    file = io.BytesIO(b64decode(new))
-    image=plt.imread(file)
-    print(image)
-
-#def set_img(attr, old, new):
-#    print("Mostrando en figura P")
-#    print(new)
-#    p.image_url(url=new,x=0,y=0)#,w=0.8,h=0.6)
-
-btImg.on_change('value', upload_fit_data)
-#btImg.on_change('filename', set_img)
-
-
+# create layout
 layout = column(
     gridplot(
         [
-        [divTitulo],
-        [
-        column(
-            column(
-                row(divNombres,txiNombres),
-                row(divApellidos,txiApellidos),
-                row(divTipoDoc,spinnerTipoDoc),
-                row(divNumDoc,txiNumDoc),
-                row(divGenero,spinnerGenero)
-                ),
-                txiObservaciones,
-                row(divProbabilidad,txiProbabilidad,divTipo,txiTipo)),
-        #column(row(p,slideZoom, slideContraste),row(p,column(btImg,btPDF,btSave)))
-        column(row(divImageLoad,slideZoom, slideContraste),row(divImagePredict,column(btImg,btPDF,btSave)))
-        ]
+          [divTitulo],
+          [
+           column(
+               column(
+                   row(divNombres,txiNombres),
+                   row(divApellidos,txiApellidos),
+                   row(divTipoDoc,spinnerTipoDoc),
+                   row(divNumDoc,txiNumDoc),
+                   row(divGenero,spinnerGenero)
+                   ),
+                   txiObservaciones,
+                   row(divProbabilidad,txiProbabilidad,divTipo,txiTipo)),
+           column(row(p,slideZoom, slideContraste),row(p,column(btImg,btPDF,btSave)))
+          ]
         ]
     )
+
     #sizing_mode="scale_both"
 )
-
-doc = curdoc()
-doc.add_root(layout)
-
-
-
-
-
+curdoc().add_root(layout)
