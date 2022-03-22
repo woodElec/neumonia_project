@@ -19,6 +19,7 @@ import control_ui as cui
 from bokeh.server.server import Server
 from bokeh.application import Application
 from bokeh.application.handlers.function import FunctionHandler
+import matplotlib.pyplot as plt
 
 #def interfaz_neumonia(doc):
 # prepare some data
@@ -37,7 +38,8 @@ points = p.circle(x=x, y=y, size=30, fill_color="#21a7df")
 
 btImg = FileInput(
     name = "image_path",
-    max_width=200
+    max_width=200,
+    accept=".jpeg, .jpg,.png"
 )
 
 btPDF = Button(
@@ -253,6 +255,20 @@ def showImage(attr, old, new):
     divImageLoad.text = div_img_html
     print(div_img_html)
 btImg.on_change('filename',showImage)
+
+def upload_fit_data(attr, old, new):
+    print("Convirtiendo a array")
+    file = io.BytesIO(b64decode(new))
+    image=plt.imread(file)
+    print(image)
+
+#def set_img(attr, old, new):
+#    print("Mostrando en figura P")
+#    print(new)
+#    p.image_url(url=new,x=0,y=0)#,w=0.8,h=0.6)
+
+btImg.on_change('value', upload_fit_data)
+#btImg.on_change('filename', set_img)
 
 
 layout = column(
