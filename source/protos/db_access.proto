@@ -8,15 +8,14 @@ service DBAccess {
 //Mantenemos la misma estructura de los mensajes del backend pero simplemente
 //agregando la imagen predicha, el porcentaje y el tipo, para poder trabajar el
 //PDF con todos los datos correspondientes.
-
-message patient_data { 
+message patient_data {
     string name = 1;
     string last_name = 2;
     string id_type = 3;
     string id_num = 4;
     string gender = 5;
     string img_path = 6;
-    bytes pred_imagen = 7;
+    string pred_imagen = 7;
     float percentage = 8;
     string type = 9;
 }
@@ -32,4 +31,3 @@ message store_status {
 message patient_id {
     string id_num = 1;
 }
-

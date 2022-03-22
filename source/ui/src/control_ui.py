@@ -1,3 +1,4 @@
+
 from base64 import b64decode
 import io
 import cv2 as rq
@@ -14,6 +15,7 @@ def callInference(attr, old, new):
 
 def callPdf(attr, old, new):
     print("callPDF:"+new)
+
     
     
 

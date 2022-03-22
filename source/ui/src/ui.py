@@ -1,6 +1,5 @@
 from base64 import b64decode
 from cProfile import label
-import io
 from logging import PlaceHolder
 from multiprocessing import Value
 from sys import maxsize
@@ -297,10 +296,6 @@ layout = column(
 doc = curdoc()
 doc.add_root(layout)
 
-
-#apps = {'/': Application(FunctionHandler(interfaz_neumonia))}
-#server = Server(apps)
-#server.io_loop.add_callback(server.show, "/")
 
 
 
