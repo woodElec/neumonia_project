@@ -2,10 +2,20 @@ from cProfile import label
 from logging import PlaceHolder
 from sys import maxsize
 from typing import Sized
+import os
+import base64
+
 from bokeh.layouts import layout, gridplot, column, row
 from bokeh.models import Div, RangeSlider, Spinner, TextInput, Button, PlainText
+from bokeh.models.widgets import FileInput
 from bokeh.plotting import figure, show
+from bokeh.io import curdoc
 from numpy import size
+from bokeh.models import ColumnDataSource, CustomJS
+
+import ui_control
+
+ui_behavior = ui_control.UIControl()
 
 # prepare some data
 x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -18,15 +28,15 @@ p2 = figure(x_range=(1, 9), width=300, height=150)
 points = p.circle(x=x, y=y, size=30, fill_color="#21a7df")
 
 
-
-
-btImg = Button(
-    button_type="warning",
+btImg = FileInput(
     max_width=200,
-    max_height=100,
-    name="btImg",
-    label="Cargar Imagen"
+    max_height=100
 )
+
+
+btImg.on_change('value', ui_behavior.load_image)
+
+
 btPDF = Button(
     
     button_type="primary",
@@ -244,6 +254,4 @@ layout = column(
 
     #sizing_mode="scale_both"
 )
-
-# show result
-show(layout)
+curdoc().add_root(layout)
