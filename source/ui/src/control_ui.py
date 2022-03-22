@@ -1,8 +1,6 @@
+
 from base64 import b64decode
 import io
-#import cv2 
-#import backend_pb2_grpc as grpc
-#import backend_pb2 as cli
 
 def callInference(img):
     image = io.BytesIO(b64decode(img))

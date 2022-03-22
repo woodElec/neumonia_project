@@ -1,6 +1,5 @@
 from base64 import b64decode
 from cProfile import label
-import io
 from logging import PlaceHolder
 from multiprocessing import Value
 from sys import maxsize
@@ -19,6 +18,7 @@ import control_ui as cui
 from bokeh.server.server import Server
 from bokeh.application import Application
 from bokeh.application.handlers.function import FunctionHandler
+import matplotlib.pyplot as plt
 
 #def interfaz_neumonia(doc):
 # prepare some data
@@ -37,7 +37,8 @@ points = p.circle(x=x, y=y, size=30, fill_color="#21a7df")
 
 btImg = FileInput(
     name = "image_path",
-    max_width=200
+    max_width=200,
+    accept=".jpeg, .jpg,.png"
 )
 btInf = Button(
     
@@ -290,10 +291,6 @@ layout = column(
 doc = curdoc()
 doc.add_root(layout)
 
-
-#apps = {'/': Application(FunctionHandler(interfaz_neumonia))}
-#server = Server(apps)
-#server.io_loop.add_callback(server.show, "/")
 
 
 
