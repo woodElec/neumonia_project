@@ -27,15 +27,12 @@ p2 = figure(x_range=(1, 9), width=300, height=150)
 
 points = p.circle(x=x, y=y, size=30, fill_color="#21a7df")
 
-
 btImg = FileInput(
     max_width=200,
     max_height=100
 )
 
-
 btImg.on_change('value', ui_behavior.load_image)
-
 
 btPDF = Button(
     
@@ -45,6 +42,7 @@ btPDF = Button(
     name="btPDF",
     label="PDF"
 )
+#btPDF.on_change(curdoc().models, ui_behavior.create_pdf)
 
 btSave = Button(
     button_type="success",

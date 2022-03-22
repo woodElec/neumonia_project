@@ -25,4 +25,6 @@ class UIControl:
     def load_image(self, attr, old, new):
 
         pil_image = self._decode_input_data(new)
-            
+
+    def create_pdf(self, attr,old, new):
+        pass
