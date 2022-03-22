@@ -39,10 +39,18 @@ btImg = FileInput(
     name = "image_path",
     max_width=200
 )
+btInf = Button(
+    
+    button_type="success",
+    max_width=200,
+    max_height=100,
+    name="btINF",
+    label="Inference",
+)
 
 btPDF = Button(
     
-    button_type="primary",
+    button_type="success",
     max_width=200,
     max_height=100,
     name="btPDF",
@@ -246,15 +254,16 @@ txiTipo = TextInput(
     disabled=True,
     name="txiTipo"
 )
-
+#mouestra la imagen seleccionada en la UI
 def showImage(attr, old, new):
     divImageLoad.background="white"
-    div_img_html = "<img src='"+new+"'>"
+    new_var = btImg.on_change('filename')
+    div_img_html = "<img src='"+new_var+"'>"
     divImageLoad.text = div_img_html
-    print(div_img_html)
+    cui.callInference(new)
 btImg.on_change('filename',showImage)
 
-
+btPDF.on_change(txiNombres.value,cui.callPdf)
 layout = column(
     gridplot(
         [
